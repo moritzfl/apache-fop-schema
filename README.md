@@ -14,7 +14,7 @@ This is why I created a bunch of xsd schemas for use in the IDE of your choice (
 
 ## Working with Apache FOP configuration
 - you may use a configuration like this in Apache FOP - Apache FOP won't be disturbed by the namespace declaration (tested with Apache FOP 2.10)
-```
+```xml
 <fop xmlns="http://xmlgraphics.apache.org/fop/config" version="1.0">
     <renderers>
         <renderer mime="application/pdf"/>
@@ -22,7 +22,7 @@ This is why I created a bunch of xsd schemas for use in the IDE of your choice (
 </fop>
 ```
 - you can NOT use a configuration like this in Apache FOP - Apache FOP will be disturbed by the fop: prefixes on each element tag.
-```
+```xml
 <fop:fop xmlns:fop="http://xmlgraphics.apache.org/fop/config" version="1.0">
     <fop:renderers>
         <fop:renderer mime="application/pdf"/>
