@@ -1,338 +1,189 @@
-<?xml version="1.0" encoding="iso-8859-1"?>
-<xs:schema xmlns="http://www.w3.org/2001/XMLSchema"
-           targetNamespace = "http://xmlgraphics.apache.org/fop/extensions"
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:compat="urn:apache-fop-schema:compatibility"
            xmlns:fox="http://xmlgraphics.apache.org/fop/extensions"
-           xmlns:fo="http://www.w3.org/1999/XSL/Format"
-           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://xmlgraphics.apache.org/fop/extensions"
            elementFormDefault="qualified">
-  <xs:annotation>
-    <xs:documentation>
-      XML Schema for Apache FOP Extensions (FOX). This schema defines FOP-specific extensions to the XSL-FO standard,
-      providing additional functionality for PDF output and other features not covered by the standard XSL-FO specification.
-
-      These extensions include features for PDF bookmarks, document metadata, accessibility, form fields, watermarks,
-      and security settings.
-
-      For more information, see the Apache FOP documentation: https://xmlgraphics.apache.org/fop/
-    </xs:documentation>
-  </xs:annotation>
-  <xs:import namespace="fo" schemaLocation="fo.xsd"/>
-  <xs:import namespace="http://www.w3.org/XML/1998/namespace"/>
-
-  <!-- FOP-specific extension attributes -->
-  <xs:attribute name="destination">
     <xs:annotation>
-      <xs:documentation>
-        Specifies a destination for internal links within a document.
-      </xs:documentation>
+        <xs:documentation source="https://xmlgraphics.apache.org/fop/2.12/extensions.html">General FOP 2.12 extensions. Extension properties are namespace-qualified; the local attributes on extension elements below are not.</xs:documentation>
     </xs:annotation>
-  </xs:attribute>
-  <xs:attribute name="alt-text">
     <xs:annotation>
-      <xs:documentation>
-        Provides alternative text for images and other non-text content, improving accessibility.
-      </xs:documentation>
+        <xs:documentation compat:feature="fox:document-info / fox:document-info-entry"
+                          compat:status="unsupported" compat:fop="2.12"
+                          compat:evidence="source runtime-probe">
+            FOP 2.12: Unsupported. Not registered in ExtensionElementMapping. Use XMP, FOUserAgent, or pdf:info for custom PDF Info.
+        </xs:documentation>
+        <xs:documentation compat:feature="fox:accessibility"
+                          compat:status="unsupported" compat:fop="2.12"
+                          compat:evidence="source runtime-probe">
+            FOP 2.12: Unsupported. Not registered as an element. Use &lt;accessibility&gt; in fop.xconf and fox:alt-text on graphics.
+        </xs:documentation>
+        <xs:documentation compat:feature="fox:form-field"
+                          compat:status="unsupported" compat:fop="2.12"
+                          compat:evidence="source runtime-probe">
+            FOP 2.12: Unsupported. Not registered as an element. FO markup does not create PDF form fields with this name.
+        </xs:documentation>
+        <xs:documentation compat:feature="fox:watermark"
+                          compat:status="unsupported" compat:fop="2.12"
+                          compat:evidence="source runtime-probe">
+            FOP 2.12: Unsupported. Not registered as an element. A page master's background image is one supported way to add a repeated background.
+        </xs:documentation>
+        <xs:documentation compat:feature="fox:pdf-security"
+                          compat:status="unsupported" compat:fop="2.12"
+                          compat:evidence="source runtime-probe">
+            FOP 2.12: Unsupported. Not registered as an element. Use PDF renderer &lt;encryption-params&gt; instead.
+        </xs:documentation>
+        <xs:documentation compat:feature="fox:outline / fox:label"
+                          compat:status="unsupported" compat:fop="2.12"
+                          compat:evidence="source runtime-probe">
+            FOP 2.12: Unsupported. Registered as unknown legacy objects. Use the standard fo:bookmark-tree.
+        </xs:documentation>
+        <xs:documentation compat:feature="Other renderer extensions, such as afp:, pcl:, and ps:"
+                          compat:status="not-modeled" compat:fop="2.12"
+                          compat:evidence="schema-scope" source="https://xmlgraphics.apache.org/fop/2.12/extensionsreference.html">
+            FOP 2.12: Not modeled. This project does not define those renderer extensions; see the FOP extensions reference for them.
+        </xs:documentation>
     </xs:annotation>
-  </xs:attribute>
-  <xs:attribute name="header">
-    <xs:annotation>
-      <xs:documentation>
-        Specifies header text for accessibility purposes.
-      </xs:documentation>
-    </xs:annotation>
-  </xs:attribute>
-  <xs:attribute name="fox-destination-color">
-    <xs:annotation>
-      <xs:documentation>
-        Specifies the color of a link destination in PDF output.
-      </xs:documentation>
-    </xs:annotation>
-  </xs:attribute>
-  <xs:attribute name="fox-destination-type">
-    <xs:annotation>
-      <xs:documentation>
-        Specifies the type of a link destination in PDF output.
-      </xs:documentation>
-    </xs:annotation>
-  </xs:attribute>
-  <xs:attribute name="fox-destination-show">
-    <xs:annotation>
-      <xs:documentation>
-        Specifies how a link destination should be displayed in PDF output.
-      </xs:documentation>
-    </xs:annotation>
-  </xs:attribute>
-
-  <!-- PDF-specific scaling options -->
-  <xs:attribute name="scaling">
-    <xs:annotation>
-      <xs:documentation>
-        Specifies how images should be scaled in PDF output. Options include uniform scaling (preserves aspect ratio),
-        non-uniform scaling (may distort the image), or inherit (use the parent's scaling).
-      </xs:documentation>
-    </xs:annotation>
-    <xs:simpleType>
-      <xs:restriction base="xs:token">
-        <xs:enumeration value="uniform"/>
-        <xs:enumeration value="non-uniform"/>
-        <xs:enumeration value="inherit"/>
-      </xs:restriction>
+    <xs:simpleType name="BooleanKeyword">
+        <xs:annotation><xs:documentation>FO boolean property keywords, not XML Schema's numeric booleans.</xs:documentation></xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="true"/>
+            <xs:enumeration value="false"/>
+        </xs:restriction>
     </xs:simpleType>
-  </xs:attribute>
+    <xs:attribute name="alt-text" type="xs:string">
+        <xs:annotation><xs:documentation source="https://xmlgraphics.apache.org/fop/2.12/accessibility.html">Text alternative for a graphic, inline foreign object, or basic link in tagged PDF. Describe the information or link purpose, e.g. "Sales rose from 20 to 35". Enable accessibility in the FOP configuration. FOP 2.12 also writes this to the internal link annotation's Contents.</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="header" type="fox:BooleanKeyword">
+        <xs:annotation><xs:documentation source="https://xmlgraphics.apache.org/fop/2.12/accessibility.html">On fo:table-column, true marks cells in that column as row headers in tagged PDF. Cells in fo:table-header are already column headers.</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="abbreviation" type="xs:string">
+        <xs:annotation><xs:documentation>Expansion for an fo:inline in tagged PDF, e.g. fox:abbreviation="World Wide Web" for "WWW". This is PDF structure metadata, not replacement text for layout.</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="auto-toggle">
+        <xs:annotation><xs:documentation>On fo:multi-switch, select-first-fitting chooses the first case that fits the available space. This is a layout choice, not an interactive PDF toggle.</xs:documentation></xs:annotation>
+        <xs:simpleType><xs:restriction base="xs:token">
+            <xs:enumeration value="select-first-fitting"/>
+        </xs:restriction></xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="disable-column-balancing" type="fox:BooleanKeyword">
+        <xs:annotation><xs:documentation>On fo:flow, true disables column balancing before spans. It does not change the number of columns.</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="block-progression-unit" type="xs:string">
+        <xs:annotation>
+            <xs:documentation compat:feature="fox:block-progression-unit"
+                              compat:status="unsupported" compat:fop="2.12"
+                              compat:evidence="source runtime-probe">
+                Length property intended for block-progression grid alignment.
 
-  <!-- PDF bookmarks and document information -->
-  <xs:element name="document-info">
-    <xs:annotation>
-      <xs:documentation>
-        Contains metadata information about the document, such as title, author, subject, and keywords.
-        This information is used in PDF document properties and can be accessed by document management systems.
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element maxOccurs="unbounded" ref="fox:document-info-entry"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+                FOP 2.12: Unsupported. Listed by ExtensionElementMapping but no property maker in FOPropertyMapping; do not rely on it for grid layout.
+            </xs:documentation>
+        </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="widow-content-limit" type="xs:string">
+        <xs:annotation><xs:documentation>Minimum length of trailing content kept together across a break in fo:table or fo:list-block, e.g. "3 * 1.2em".</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="orphan-content-limit" type="xs:string">
+        <xs:annotation><xs:documentation>Minimum length of leading content kept together across a break in fo:table or fo:list-block, e.g. "3 * 1.2em".</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="scale" type="xs:string">
+        <xs:annotation><xs:documentation>One page scale factor or separate horizontal and vertical factors, e.g. "0.8 1.2". The prepress extension is implemented for PDF and Java2D.</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="bleed" type="xs:string">
+        <xs:annotation><xs:documentation>Expands the trim box to the bleed box in PDF or Java2D. Use one to four nonnegative lengths in CSS padding order, e.g. "3mm" or "3mm 5mm".</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="crop-offset" type="xs:string">
+        <xs:annotation><xs:documentation>Expands the trim box to the media box in PDF or Java2D. Use one to four nonnegative lengths in CSS padding order. Defaults to fox:bleed.</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="crop-box">
+        <xs:annotation><xs:documentation>Choose which box is used for cropping in PDF or Java2D: trim-box, bleed-box, or media-box (default).</xs:documentation></xs:annotation>
+        <xs:simpleType>
+            <xs:restriction base="xs:token">
+                <xs:enumeration value="trim-box"/>
+                <xs:enumeration value="bleed-box"/>
+                <xs:enumeration value="media-box"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="transform" type="xs:string">
+        <xs:annotation><xs:documentation>SVG-style transformation on an absolutely or fixed-positioned fo:block-container. FOP uses millipoints: translate(10000,0) moves content 10pt right. Supported for PDF, PostScript and Java2D.</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="border-radius" type="xs:string">
+        <xs:annotation><xs:documentation>Rounded corners on block areas. Set one radius for circular corners or two for elliptical ones (inline then block direction), e.g. "4pt 8pt". Tables require border-collapse="separate".</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="border-before-start-radius" type="xs:string">
+        <xs:annotation><xs:documentation>Radius at the intersection of the before and start borders. Use one or two lengths, e.g. "4pt".</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="border-before-end-radius" type="xs:string">
+        <xs:annotation><xs:documentation>Radius at the intersection of the before and end borders. Use one or two lengths, e.g. "4pt".</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="border-after-start-radius" type="xs:string">
+        <xs:annotation><xs:documentation>Radius at the intersection of the after and start borders. Use one or two lengths, e.g. "4pt".</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="border-after-end-radius" type="xs:string">
+        <xs:annotation><xs:documentation>Radius at the intersection of the after and end borders. Use one or two lengths, e.g. "4pt".</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="background-image-width" type="xs:string">
+        <xs:annotation><xs:documentation>Rescale a background image to the specified width, e.g. "24pt".</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="background-image-height" type="xs:string">
+        <xs:annotation><xs:documentation>Rescale a background image to the specified height, e.g. "24pt".</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="layer" type="xs:string">
+        <xs:annotation><xs:documentation>Associate content with a PDF optional-content layer. Value is the ID of a pdf:layer declaration.</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="rule-style">
+        <xs:annotation><xs:documentation>FOP-specific style for fo:leader with leader-pattern="rule"; use square for a line of square marks, or none (default) to use the standard rule-style property.</xs:documentation></xs:annotation>
+        <xs:simpleType><xs:restriction base="xs:token"><xs:enumeration value="none"/><xs:enumeration value="square"/></xs:restriction></xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="number-conversion-features" type="xs:string">
+        <xs:annotation><xs:documentation>Additional number-conversion features for certain numbering formats on fo:page-sequence. Values depend on the numbering format and language.</xs:documentation></xs:annotation>
+    </xs:attribute>
+    <xs:element name="destination">
+        <xs:annotation><xs:documentation>Creates a named PDF destination from an FO element's ID. Place it under fo:root or in the content, e.g. &lt;fox:destination internal-destination="chapter-one"/&gt;.</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="internal-destination" type="xs:NCName" use="required">
+                <xs:annotation><xs:documentation>The ID of the target FO, e.g. "chapter-one". Do not qualify this attribute with fox:.</xs:documentation></xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="external-document">
+        <xs:annotation>
+            <xs:documentation compat:feature="fox:external-document with PDF input"
+                              compat:status="plug-in-required" compat:fop="2.12"
+                              compat:evidence="source pdf-test upstream-docs" source="https://xmlgraphics.apache.org/fop/fop-pdf-images.html">
+                Add an image as a whole page, as a peer of fo:page-sequence. Single-page images are the documented baseline. This cannot concatenate FO documents.
 
-  <xs:element name="document-info-entry">
-    <xs:annotation>
-      <xs:documentation>
-        Represents a single metadata entry in the document information. Common entries include:
-        - title: The document's title
-        - author: The document's author
-        - subject: The document's subject
-        - keywords: Keywords associated with the document
-        - creator: The application that created the document
-        - producer: The application that produced the PDF
-        - created: The document creation date
-        - custom entries can also be defined
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:attribute name="name" use="required">
-        <xs:annotation>
-          <xs:documentation>
-            The name of the metadata entry (e.g., "title", "author", "subject").
-          </xs:documentation>
+                FOP 2.12: Plug-in required. The core suite verifies a single SVG page; PDF input requires the FOP PDF Images plug-in.
+            </xs:documentation>
         </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="value" use="required">
-        <xs:annotation>
-          <xs:documentation>
-            The value of the metadata entry.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-    </xs:complexType>
-  </xs:element>
-
-  <!-- PDF accessibility features -->
-  <xs:element name="accessibility">
-    <xs:annotation>
-      <xs:documentation>
-        Defines accessibility settings for PDF output. These settings enhance the accessibility of PDF documents
-        for users with disabilities, making them more compatible with screen readers and other assistive technologies.
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:attribute name="language">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies the primary language of the document (e.g., "en" for English, "de" for German).
-            This helps screen readers pronounce text correctly.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="title">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies the document title for accessibility purposes. This title is used by screen readers
-            and other assistive technologies to identify the document.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="tagged">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies whether to create a tagged PDF. Tagged PDFs include structural information that makes
-            the document more accessible to screen readers and other assistive technologies.
-          </xs:documentation>
-        </xs:annotation>
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="true"/>
-            <xs:enumeration value="false"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-    </xs:complexType>
-  </xs:element>
-
-  <!-- PDF form fields -->
-  <xs:element name="form-field" substitutionGroup="fo:basic-inlines">
-    <xs:annotation>
-      <xs:documentation>
-        Defines an interactive form field in a PDF document. Form fields allow users to enter data,
-        make selections, or trigger actions in the PDF document.
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:attribute name="field-name" use="required">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies the name of the form field. This name is used to identify the field in the PDF form.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="field-type">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies the type of form field. Different field types have different appearances and behaviors.
-          </xs:documentation>
-        </xs:annotation>
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="text"/>
-            <xs:enumeration value="button"/>
-            <xs:enumeration value="checkbox"/>
-            <xs:enumeration value="radio"/>
-            <xs:enumeration value="combobox"/>
-            <xs:enumeration value="listbox"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-      <xs:attribute name="field-value">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies the initial value of the form field.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="field-description">
-        <xs:annotation>
-          <xs:documentation>
-            Provides a description of the form field for accessibility purposes.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attributeGroup ref="fo:accessibility-properties"/>
-      <xs:attributeGroup ref="fo:relative-position-properties"/>
-    </xs:complexType>
-  </xs:element>
-
-  <!-- PDF watermark -->
-  <xs:element name="watermark" substitutionGroup="fo:basic-blocks">
-    <xs:annotation>
-      <xs:documentation>
-        Defines a watermark to be displayed on the page. Watermarks are text or images that appear
-        behind the main content of the page, often used to indicate document status (e.g., "DRAFT", "CONFIDENTIAL").
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:attribute name="text">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies the text to be displayed as a watermark.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="opacity">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies the opacity (transparency) of the watermark, as a value between 0 (completely transparent)
-            and 1 (completely opaque).
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="rotation">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies the rotation angle of the watermark text, in degrees.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attributeGroup ref="fo:block-properties"/>
-    </xs:complexType>
-  </xs:element>
-
-  <!-- PDF security settings -->
-  <xs:element name="pdf-security">
-    <xs:annotation>
-      <xs:documentation>
-        Defines security settings for PDF output. These settings control encryption, passwords,
-        and permissions for the PDF document.
-      </xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:attribute name="owner-password">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies the owner password for the PDF document. The owner password allows full access to the document,
-            including changing permissions.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="user-password">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies the user password for the PDF document. The user password allows access to the document
-            according to the specified permissions.
-          </xs:documentation>
-        </xs:annotation>
-      </xs:attribute>
-      <xs:attribute name="allow-print">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies whether printing the document is allowed.
-          </xs:documentation>
-        </xs:annotation>
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="true"/>
-            <xs:enumeration value="false"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-      <xs:attribute name="allow-copy-content">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies whether copying content from the document is allowed.
-          </xs:documentation>
-        </xs:annotation>
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="true"/>
-            <xs:enumeration value="false"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-      <xs:attribute name="allow-edit-content">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies whether editing the document content is allowed.
-          </xs:documentation>
-        </xs:annotation>
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="true"/>
-            <xs:enumeration value="false"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-      <xs:attribute name="allow-edit-annotations">
-        <xs:annotation>
-          <xs:documentation>
-            Specifies whether editing annotations in the document is allowed.
-          </xs:documentation>
-        </xs:annotation>
-        <xs:simpleType>
-          <xs:restriction base="xs:token">
-            <xs:enumeration value="true"/>
-            <xs:enumeration value="false"/>
-          </xs:restriction>
-        </xs:simpleType>
-      </xs:attribute>
-    </xs:complexType>
-  </xs:element>
+        <xs:complexType>
+            <xs:attribute name="src" type="xs:string" use="required">
+                <xs:annotation><xs:documentation>Image URI, e.g. url('cover.svg'). Resolve relative paths against the FOP base URI.</xs:documentation></xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="id" type="xs:ID">
+                <xs:annotation><xs:documentation>Unique ID that can identify this page sequence as a link target.</xs:documentation></xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="width" type="xs:string">
+                <xs:annotation><xs:documentation>Width of the image viewport and thus of the output page; defaults to auto.</xs:documentation></xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="height" type="xs:string">
+                <xs:annotation><xs:documentation>Height of the image viewport and thus of the output page; defaults to auto.</xs:documentation></xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="content-width" type="xs:string">
+                <xs:annotation><xs:documentation>Width of the image within the viewport, e.g. "100%" or "120pt".</xs:documentation></xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="content-height" type="xs:string">
+                <xs:annotation><xs:documentation>Height of the image within the viewport, e.g. "100%" or "80pt".</xs:documentation></xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="scaling">
+                <xs:annotation><xs:documentation>Choose uniform scaling to preserve aspect ratio or non-uniform scaling to allow distortion.</xs:documentation></xs:annotation>
+                <xs:simpleType><xs:restriction base="xs:token">
+                    <xs:enumeration value="uniform"/>
+                    <xs:enumeration value="non-uniform"/>
+                    <xs:enumeration value="inherit"/>
+                </xs:restriction></xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>

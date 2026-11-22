@@ -1,64 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:dc="http://purl.org/dc/elements/1.1/"
+           xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
            targetNamespace="http://purl.org/dc/elements/1.1/"
            elementFormDefault="qualified">
-
-    <xs:annotation>
-        <xs:documentation>
-            XML Schema for Dublin Core Metadata Elements.
-            This schema defines the basic Dublin Core metadata elements used for resource description.
-
-            For more information on Dublin Core, see:
-            - Dublin Core Metadata Initiative: https://dublincore.org/
-        </xs:documentation>
-    </xs:annotation>
-
-    <xs:element name="title" type="xs:string">
-        <xs:annotation>
-            <xs:documentation>
-                The name given to the resource. Typically, a Title will be a name by which the resource is formally known.
-            </xs:documentation>
-        </xs:annotation>
+    <xs:annotation><xs:documentation source="https://www.dublincore.org/specifications/dublin-core/dces/">Dublin Core properties as used in XMP. FOP also accepts plain text for common properties such as title, creator and description; the types below allow both text and their expected XMP array form.</xs:documentation></xs:annotation>
+    <xs:import namespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#" schemaLocation="rdf.xsd"/>
+    <xs:element name="title" type="dc:LocalizedText">
+        <xs:annotation><xs:documentation>Document title. Use rdf:Alt with an x-default entry for XMP. FOP copies the default title to the PDF Info dictionary.</xs:documentation></xs:annotation>
     </xs:element>
-
-    <xs:element name="creator" type="xs:string">
-        <xs:annotation>
-            <xs:documentation>
-                An entity primarily responsible for making the content of the resource. Examples of a Creator include a person, an organization, or a service.
-            </xs:documentation>
-        </xs:annotation>
+    <xs:element name="creator" type="dc:OrderedText">
+        <xs:annotation><xs:documentation>People or organizations primarily responsible for the document. Use rdf:Seq in credited order. FOP uses the creator for the PDF Info Author.</xs:documentation></xs:annotation>
     </xs:element>
-
-    <xs:element name="description" type="xs:string">
-        <xs:annotation>
-            <xs:documentation>
-                An account of the content of the resource. Description may include but is not limited to: an abstract, table of contents, reference to a graphical representation of content or a free-text account of the content.
-            </xs:documentation>
-        </xs:annotation>
+    <xs:element name="description" type="dc:LocalizedText">
+        <xs:annotation><xs:documentation>Summary or abstract. Use rdf:Alt with an x-default entry for XMP; FOP copies the default description to the PDF Info Subject.</xs:documentation></xs:annotation>
     </xs:element>
-
-    <xs:element name="subject" type="xs:string">
-        <xs:annotation>
-            <xs:documentation>
-                The topic of the content of the resource. Typically, a Subject will be expressed as keywords, key phrases, or classification codes that describe the topic of the resource.
-            </xs:documentation>
-        </xs:annotation>
+    <xs:element name="subject" type="dc:UnorderedText">
+        <xs:annotation><xs:documentation>Topics or keywords describing the document. Use rdf:Bag for multiple terms. This is not the PDF Info Subject; use dc:description for that.</xs:documentation></xs:annotation>
     </xs:element>
-
-    <xs:element name="publisher" type="xs:string">
-        <xs:annotation>
-            <xs:documentation>
-                An entity responsible for making the resource available. Examples of a Publisher include a person, an organization, or a service.
-            </xs:documentation>
-        </xs:annotation>
+    <xs:element name="publisher" type="dc:UnorderedText">
+        <xs:annotation><xs:documentation>People or organizations responsible for making the document available. Use rdf:Bag for multiple publishers.</xs:documentation></xs:annotation>
     </xs:element>
-
-    <xs:element name="date" type="xs:string">
-        <xs:annotation>
-            <xs:documentation>
-                A date associated with an event in the life cycle of the resource. Typically, Date will be associated with the creation or availability of the resource.
-            </xs:documentation>
-        </xs:annotation>
+    <xs:element name="date" type="dc:OrderedText">
+        <xs:annotation><xs:documentation>Dates associated with events in the document's life cycle, in chronological order. Use ISO 8601 dates such as 2026-11-22.</xs:documentation></xs:annotation>
     </xs:element>
-
+    <xs:element name="language" type="dc:UnorderedText">
+        <xs:annotation><xs:documentation>Languages of the document content as BCP 47 tags, e.g. en or en-GB. This XMP property is separate from the PDF catalog's /Lang entry.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:element name="contributor" type="dc:UnorderedText">
+        <xs:annotation><xs:documentation>People or organizations that contributed to the document but are not its primary creators.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:element name="coverage" type="xs:string">
+        <xs:annotation><xs:documentation>Geographic area, period or jurisdiction covered by the document.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:element name="format" type="xs:string">
+        <xs:annotation><xs:documentation>Media type of the resource, e.g. application/pdf.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:element name="identifier" type="xs:string">
+        <xs:annotation><xs:documentation>Unambiguous identifier for the resource, e.g. a DOI or ISBN.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:element name="relation" type="dc:UnorderedText">
+        <xs:annotation><xs:documentation>Related resources, preferably identified by stable IDs or URIs.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:element name="rights" type="dc:LocalizedText">
+        <xs:annotation><xs:documentation>Rights or license statement. Use rdf:Alt for localized notices.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:element name="source" type="xs:string">
+        <xs:annotation><xs:documentation>Resource from which this document is derived, preferably identified by a URI or other stable identifier.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:element name="type" type="dc:UnorderedText">
+        <xs:annotation><xs:documentation>Nature or genre of the content, e.g. Text; use dc:format for its media type.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:complexType name="LocalizedText" mixed="true">
+        <xs:annotation><xs:documentation>Plain text or a single rdf:Alt array of language alternatives.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element ref="rdf:Alt" minOccurs="0"/></xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="OrderedText" mixed="true">
+        <xs:annotation><xs:documentation>Plain text or a single rdf:Seq array of ordered values.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element ref="rdf:Seq" minOccurs="0"/></xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="UnorderedText" mixed="true">
+        <xs:annotation><xs:documentation>Plain text or a single rdf:Bag array of unordered values.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element ref="rdf:Bag" minOccurs="0"/></xs:sequence>
+    </xs:complexType>
 </xs:schema>

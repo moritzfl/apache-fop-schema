@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:compat="urn:apache-fop-schema:compatibility"
+           targetNamespace="http://www.w3.org/XML/1998/namespace">
+    <xs:annotation><xs:documentation source="https://www.w3.org/TR/xml/#sec-lang-tag">Local subset of the reserved XML namespace for language annotations in FO and XMP. Other XML namespace attributes are outside this schema's scope.</xs:documentation></xs:annotation>
+    <xs:attribute name="lang">
+        <xs:annotation>
+            <xs:documentation compat:feature="xml:lang as an FO shorthand"
+                              compat:status="partial" compat:fop="2.12"
+                              compat:evidence="pdf-test source">
+                Language tag for the content, e.g. "en-US". An empty value clears inheritance. In XMP, use x-default for the default localized value.
+
+                FOP 2.12: Partial. A simple tag like en-GB works. FOP treats the first two subtags as language and country, so a full BCP 47 tag containing a script is not interpreted correctly.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType><xs:union memberTypes="xs:language">
+            <xs:simpleType><xs:restriction base="xs:string"><xs:enumeration value=""/></xs:restriction></xs:simpleType>
+        </xs:union></xs:simpleType>
+    </xs:attribute>
+</xs:schema>

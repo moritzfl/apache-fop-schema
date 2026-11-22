@@ -3,44 +3,49 @@
            xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
            targetNamespace="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
            elementFormDefault="qualified">
-
-    <xs:annotation>
-        <xs:documentation>
-            XML Schema for RDF (Resource Description Framework).
-            This schema defines the basic structure for RDF metadata used in various document formats.
-
-            For more information on RDF, see:
-            - W3C RDF Specification: https://www.w3.org/RDF/
-        </xs:documentation>
-    </xs:annotation>
-
+    <xs:annotation><xs:documentation source="https://www.w3.org/TR/rdf-syntax-grammar/">RDF/XML subset for XMP in Apache FOP, not a general RDF validator. Use xmpmeta.xsd or fo.xsd to validate known Dublin Core properties alongside RDF.</xs:documentation></xs:annotation>
+    <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
     <xs:element name="RDF">
-        <xs:annotation>
-            <xs:documentation>
-                The root element for RDF metadata. It contains descriptions of resources.
-            </xs:documentation>
-        </xs:annotation>
+        <xs:annotation><xs:documentation>Root of the RDF metadata packet. FOP accepts it inside x:xmpmeta or directly under fo:declarations.</xs:documentation></xs:annotation>
         <xs:complexType>
-            <xs:sequence>
-                <xs:element ref="rdf:Description" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-            <xs:anyAttribute namespace="##other" processContents="lax"/>
+            <xs:sequence><xs:element ref="rdf:Description" minOccurs="0" maxOccurs="unbounded"/></xs:sequence>
         </xs:complexType>
     </xs:element>
-
     <xs:element name="Description">
-        <xs:annotation>
-            <xs:documentation>
-                Describes a resource using property elements.
-            </xs:documentation>
-        </xs:annotation>
+        <xs:annotation><xs:documentation>Groups metadata about one resource. Use rdf:about="" for document-level properties. Children or attributes in metadata namespaces (e.g. dc:title or xmp:CreatorTool) carry the actual values.</xs:documentation></xs:annotation>
         <xs:complexType>
-            <xs:sequence>
-                <xs:any namespace="##any" processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
-            </xs:sequence>
-            <xs:attribute name="about" type="xs:string" use="optional"/>
+            <xs:sequence><xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/></xs:sequence>
+            <xs:attribute name="about" type="xs:anyURI" form="qualified">
+                <xs:annotation><xs:documentation>URI of the resource being described. An empty value identifies the document containing this metadata.</xs:documentation></xs:annotation>
+            </xs:attribute>
             <xs:anyAttribute namespace="##other" processContents="lax"/>
         </xs:complexType>
     </xs:element>
-
+    <xs:element name="Alt" type="rdf:Items">
+        <xs:annotation><xs:documentation>Alternative values. For a localized XMP title or description, use an rdf:li with xml:lang="x-default" first, followed by any translations.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:element name="Bag" type="rdf:Items">
+        <xs:annotation><xs:documentation>Unordered values, e.g. the keywords in dc:subject or the language tags in dc:language.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:element name="Seq" type="rdf:Items">
+        <xs:annotation><xs:documentation>Ordered values, e.g. the authors in dc:creator in their credited order.</xs:documentation></xs:annotation>
+    </xs:element>
+    <xs:complexType name="Items">
+        <xs:annotation><xs:documentation>Zero or more rdf:li members shared by RDF alternatives, bags and sequences.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element ref="rdf:li" minOccurs="0" maxOccurs="unbounded"/></xs:sequence>
+    </xs:complexType>
+    <xs:element name="li">
+        <xs:annotation><xs:documentation>One array member. Use text for Dublin Core arrays; a structured XMP property can use rdf:parseType="Resource" and child properties instead.</xs:documentation></xs:annotation>
+        <xs:complexType mixed="true">
+            <xs:sequence><xs:any namespace="##other" processContents="lax" minOccurs="0" maxOccurs="unbounded"/></xs:sequence>
+            <xs:attribute ref="xml:lang"/>
+            <xs:attribute name="parseType" form="qualified">
+                <xs:annotation><xs:documentation>Use Resource for a member containing structured properties rather than a text value.</xs:documentation></xs:annotation>
+                <xs:simpleType><xs:restriction base="xs:token"><xs:enumeration value="Resource"/></xs:restriction></xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="resource" type="xs:anyURI" form="qualified">
+                <xs:annotation><xs:documentation>URI of the resource represented by this array member, instead of literal text.</xs:documentation></xs:annotation>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
 </xs:schema>
