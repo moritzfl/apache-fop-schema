@@ -46,7 +46,7 @@ For the no-namespace form, omit the default namespace and use `xsi:noNamespaceSc
 </fop>
 ```
 
-Apache FOP also provides an [upstream configuration schema](https://github.com/apache/xmlgraphics-fop/blob/HEAD/fop/src/foschema/fop-configuration.xsd). This project's XSD 1.0 schema documents more options, but uses one content model for `<renderer>`: it cannot choose different child rules based on `@mime`. That means a PDF-only option can validate under the PNG renderer. Separate validation rules could check those combinations; an output test is still needed for requirements such as font embedding or a PDF profile.
+Both this schema and the [upstream FOP configuration schema](https://github.com/apache/xmlgraphics-fop/blob/HEAD/fop/src/foschema/fop-configuration.xsd) use a single content model for `<renderer>`. Neither checks whether an option applies to the selected `@mime`: for example, `<pdf-a-mode>` can validate under `mime="image/png"`. Separate rules can check those combinations; requirements such as font embedding or PDF profile conformance must be checked in the output.
 
 ### Normalize a namespaced configuration
 
