@@ -13,6 +13,7 @@ java {
 }
 
 dependencies {
+    implementation(libs.commonmark)
     testImplementation(libs.fop)
     testImplementation(libs.pdfbox)
     testImplementation(platform(libs.junit.bom))
@@ -36,4 +37,13 @@ tasks.test {
     systemProperty("stylesheetDir", stylesheets.asFile.absolutePath)
     systemProperty("pdfDir", pdfs.get().asFile.absolutePath)
     systemProperty("java.awt.headless", "true")
+}
+
+tasks.register<JavaExec>("compatibilityReport") {
+    group = "documentation"
+    description = "Prints the compatibility report as Markdown, HTML or readable text."
+    mainClass = "org.apachefopschema.CompatibilityReport"
+    classpath = sourceSets.main.get().runtimeClasspath
+    javaLauncher = javaToolchains.launcherFor(java.toolchain)
+    args(schemas.asFile.absolutePath, providers.gradleProperty("reportFormat").orElse("markdown").get())
 }

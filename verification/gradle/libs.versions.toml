@@ -1,9 +1,11 @@
 [versions]
+commonmark = "0.33.0"
 fop = "2.12"
 junit = "6.1.3"
 pdfbox = "3.0.8"
 
 [libraries]
+commonmark = { module = "org.commonmark:commonmark", version.ref = "commonmark" }
 fop = { module = "org.apache.xmlgraphics:fop", version.ref = "fop" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
 junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
