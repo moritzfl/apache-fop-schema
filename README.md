@@ -93,7 +93,7 @@ Install JDK 21, then run this from the repository root:
 
 On Windows, run `verification\gradlew.bat -p verification test`.
 
-The tests compile every schema with local imports, validate the example XML, run FOP, and inspect PDF pages, text, annotations, structure, metadata, fonts and encryption. Open `verification/build/reports/tests/test/index.html` for the test report or `verification/build/examples/` for the generated PDFs. See the [examples](docs/examples.md) for what each PDF proves.
+The suite validates the schemas and example XML, runs FOP, and inspects the generated PDF, AFP, PostScript, and PNG files using Java libraries only. See the [examples](docs/examples.md) for what each test verifies. Find the test report under `verification/build/reports/tests/test/` and the generated files under `verification/build/examples/`.
 
 ## Generate the compatibility report
 

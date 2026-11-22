@@ -1,6 +1,6 @@
 # Examples and recipes
 
-Run the [Gradle suite](../README.md#run-the-verification-project) to generate the example PDFs. Each assertion checks a visible result or a PDF data structure, not just whether the renderer returned without throwing.
+Run the [Gradle suite](../README.md#run-the-verification-project) to generate the example files. The tests check output with Java libraries, not external tools.
 
 | Example | Verified output |
 | --- | --- |
@@ -11,8 +11,11 @@ Run the [Gradle suite](../README.md#run-the-verification-project) to generate th
 | [PDF/UA and fonts](../verification/examples/pdf-ua/) | PDF/UA-1 identification and language, full versus subset font programs, and extracted accented text. The suite uses Liberation Sans from the pinned PDFBox artifact; for manual CLI use, put your licensed `LiberationSans-Regular.ttf` beside `fop.xconf`. |
 | [Encryption](../verification/examples/encrypted/fop.xconf) | AES-256 configuration requires a password; PDFBox checks restricted user and unrestricted owner permissions. Uses the navigation FO and public example passwords. |
 | [Namespaced configuration](../verification/examples/namespaced-config/fop.xconf) | The default namespace works directly and sets page size and tagging. The [prefixed form](../verification/examples/namespaced-config/prefixed.xconf) validates but needs the [normalizer](../README.md#normalize-a-namespaced-configuration) for FOP to apply its settings. |
+| [AFP, PostScript, and PNG](../verification/examples/renderer-output/) | AFP page size and resolution from structured fields (afplib); PostScript language level and page bounds from DSC comments (XML Graphics Commons); PNG dimensions, fill color, and alpha (ImageIO). |
 
 The suite also enables PDF object streams on the navigation document and checks the actual object and cross-reference streams.
+
+The AFP and PostScript checks verify file structure and renderer settings, not visual output or printer behavior. FOP warns about default AFP font setup even though this fixture has no text; the test allows only that warning.
 
 ## Validate FO and keep strict rendering
 

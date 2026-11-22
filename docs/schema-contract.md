@@ -14,7 +14,7 @@ The schemas in [`schema/`](../schema/) are intended for namespace-aware XML auth
 
 These checks verify the portable schema features needed by authoring tools; they do not run a particular editor's UI. XSD 1.0 cannot encode every contextual FO expression or renderer-specific rule. For example, an XML schema can check that `internal-destination` is written on a bookmark, but it cannot prove that the target generates an area reachable in the PDF.
 
-For a new tested feature, add or extend an example under `verification/examples/`, then assert the specific expected behavior in the generated PDF. On success, the suite should produce no unexpected FOP warnings. For a known fallback, assert the expected diagnostic or unchanged output separately.
+For a new tested feature, add or extend an example under `verification/examples/`, then assert the expected behavior in the relevant output format. Use Java libraries, not external viewers or command-line tools. On success, the suite should produce no unexpected FOP warnings. For a known fallback, assert the expected diagnostic or unchanged output separately.
 
 ## Record a compatibility gap
 

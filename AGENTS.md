@@ -18,7 +18,7 @@ This project documents XSL-FO for Apache FOP, primarily PDF output. Treat the W3
 
 1. Check the [W3C XSL 1.1 recommendation](https://www.w3.org/TR/xsl11/), Apache's [compliance table](https://xmlgraphics.apache.org/fop/compliance.html), and the docs and source for the FOP release pinned in `verification/gradle/libs.versions.toml`. Keep dependency versions in that catalog and use the JUnit BOM for aligned JUnit versions. Do not infer renderer support from a registered FO object, a parsed property, or a successful render.
 2. Follow [the schema contract](docs/schema-contract.md): XSD 1.0, UTF-8, relative imports, explicit child references, documentation on every named declaration, and enumerations for closed vocabularies. Keep FO expressions open where the formatter must evaluate them. Use wildcards only at deliberate extension points, such as custom XMP properties or embedded graphics.
-3. Add or update a small fixture in `verification/examples/`. Validate the input, then use PDFBox to check the actual effect rather than just checking that FOP wrote a PDF. Use negative cases for bad syntax and separate tests for known FOP fallbacks. Supported examples should produce no unexpected FOP warnings.
+3. Add or update a small fixture in `verification/examples/`. Validate the input, then assert the effect in the output using Java libraries: PDFBox, afplib, XML Graphics Commons DSC, or ImageIO. Use negative cases for bad syntax and separate tests for known FOP fallbacks. Supported examples should produce no unexpected FOP warnings.
 4. Mark confirmed limitations in `xs:documentation` with [structured compatibility attributes](docs/schema-contract.md#record-a-compatibility-gap). Record the FOP version and distinguish PDF tests, source findings, and published compliance claims. When bumping FOP, compare release notes with the generated report and rerun the tests before marking a gap closed. Do not maintain a separate list of gaps.
 
 From the repository root, with JDK 21:
@@ -33,7 +33,7 @@ For a clean run without network access after downloading dependencies:
 ./verification/gradlew -p verification clean test --offline
 ```
 
-Open `verification/build/reports/tests/test/index.html` for results and `verification/build/examples/` for generated PDFs. Do not commit generated files or depend on host-installed fonts. The font example uses Liberation Sans from the pinned PDFBox artifact.
+Open `verification/build/reports/tests/test/index.html` for results and `verification/build/examples/` for generated files. Do not commit generated files or depend on host-installed fonts or external tools for the tests. The font example uses Liberation Sans from the pinned PDFBox artifact.
 
 Generate the current compatibility report from the XSDs:
 
