@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.TransformerFactory;
@@ -34,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 final class Fixtures {
     static final Path SCHEMAS = Path.of(System.getProperty("schemaDir"));
     static final Path EXAMPLES = Path.of(System.getProperty("exampleDir"));
-    private static final Path PDFS = Path.of(System.getProperty("pdfDir"));
+    private static final Path EXAMPLE_OUTPUT = Path.of(System.getProperty("exampleOutputDir"));
 
     private Fixtures() {
     }
@@ -82,8 +83,12 @@ final class Fixtures {
         return format(fo, config, base, ignoreSchemaHints, MimeConstants.MIME_PDF);
     }
 
+    static Rendered render(String fo, String config, Path base, String mime) throws Exception {
+        return format(fo, config, base, true, mime);
+    }
+
     static Rendered areaTree(String fo, Path base) throws Exception {
-        return format(fo, null, base, true, MimeConstants.MIME_FOP_AREA_TREE);
+        return render(fo, null, base, MimeConstants.MIME_FOP_AREA_TREE);
     }
 
     private static Rendered format(String fo, String config, Path base, boolean ignoreSchemaHints, String mime)
@@ -107,26 +112,39 @@ final class Fixtures {
     }
 
     static byte[] renderExample(String name, String foPath, String configPath) throws Exception {
+        return renderExample(name + ".pdf", foPath, configPath, MimeConstants.MIME_PDF);
+    }
+
+    static byte[] renderExample(String fileName, String foPath, String configPath, String mime,
+                                String... allowedWarningIds) throws Exception {
         String fo = example(foPath);
         String config = configPath == null ? null : example(configPath);
         validate(schema("fo.xsd"), fo);
         if (config != null) {
             validate(schema("fop-config-no-namespace.xsd"), config);
         }
-        var pdf = render(fo, config, EXAMPLES.resolve(foPath).getParent());
-        pdf.assertNoProblems();
-        writePdf(name, pdf.bytes());
-        return pdf.bytes();
+        var output = render(fo, config, EXAMPLES.resolve(foPath).getParent(), mime);
+        output.assertNoProblems(allowedWarningIds);
+        writeOutput(fileName, output.bytes());
+        return output.bytes();
     }
 
     static void writePdf(String name, byte[] bytes) throws Exception {
-        Files.createDirectories(PDFS);
-        Files.write(PDFS.resolve(name + ".pdf"), bytes);
+        writeOutput(name + ".pdf", bytes);
+    }
+
+    private static void writeOutput(String fileName, byte[] bytes) throws Exception {
+        Files.createDirectories(EXAMPLE_OUTPUT);
+        Files.write(EXAMPLE_OUTPUT.resolve(fileName), bytes);
     }
 
     record Rendered(byte[] bytes, List<Event> events) {
-        void assertNoProblems() {
-            var problems = events.stream().filter(event -> event.getSeverity() != EventSeverity.INFO).toList();
+        void assertNoProblems(String... allowedWarningIds) {
+            var allowed = Set.of(allowedWarningIds);
+            var problems = events.stream()
+                    .filter(event -> event.getSeverity() != EventSeverity.INFO)
+                    .filter(event -> event.getSeverity() != EventSeverity.WARN || !allowed.contains(event.getEventID()))
+                    .toList();
             assertTrue(problems.isEmpty(), () -> "Unexpected FOP events: " + problems.stream()
                     .map(event -> event.getEventID() + " " + event.getParams()).toList());
         }

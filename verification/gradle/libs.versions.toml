@@ -1,10 +1,12 @@
 [versions]
+afplib = "0.0.15"
 commonmark = "0.33.0"
 fop = "2.12"
 junit = "6.1.3"
 pdfbox = "3.0.8"
 
 [libraries]
+afplib = { module = "org.afplib:afplib", version.ref = "afplib" }
 commonmark = { module = "org.commonmark:commonmark", version.ref = "commonmark" }
 fop = { module = "org.apache.xmlgraphics:fop", version.ref = "fop" }
 junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
