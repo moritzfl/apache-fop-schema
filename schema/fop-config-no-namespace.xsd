@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xs:annotation><xs:documentation source="https://xmlgraphics.apache.org/fop/2.12/configuration.html">No-namespace configuration for Apache FOP 2.12, with detailed PDF renderer settings. For the same vocabulary under this project's configuration namespace, use fop-config.xsd.</xs:documentation></xs:annotation>
+    <xs:simpleType name="BooleanText">
+        <xs:annotation><xs:documentation>Use true or false. FOP parses text booleans and does not interpret XML Schema's numeric 1 as true.</xs:documentation></xs:annotation>
+        <xs:restriction base="xs:string"><xs:enumeration value="true"/><xs:enumeration value="false"/></xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="BooleanAttribute">
+        <xs:annotation><xs:documentation>FOP accepts true or yes as true for these attributes. Prefer true and false in new configuration.</xs:documentation></xs:annotation>
+        <xs:restriction base="xs:string"><xs:enumeration value="true"/><xs:enumeration value="false"/><xs:enumeration value="yes"/><xs:enumeration value="no"/></xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PositiveResolution">
+        <xs:annotation><xs:documentation>Positive resolution in dots per inch; decimal values are accepted by the general FOP configuration parser.</xs:documentation></xs:annotation>
+        <xs:restriction base="xs:decimal"><xs:minExclusive value="0"/></xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="TwoLetterCode">
+        <xs:annotation><xs:documentation>Exactly two ASCII letters, as required by the configuration parser for hyphenation languages and countries.</xs:documentation></xs:annotation>
+        <xs:restriction base="xs:string"><xs:pattern value="[A-Za-z]{2}"/></xs:restriction>
+    </xs:simpleType>
+    <xs:element name="fop">
+        <xs:annotation><xs:documentation>Root of the FOP configuration. Use &lt;fop version="1.0"&gt; and unprefixed element names throughout. Settings can appear in any order. Supply a singleton setting only once.</xs:documentation></xs:annotation>
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="strict-configuration" type="BooleanText"><xs:annotation><xs:documentation>Report certain invalid or inaccessible configuration resources as errors instead of continuing. Default false; this does not detect unknown or misplaced settings.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="strict-validation" type="BooleanText"><xs:annotation><xs:documentation>Enforce FOP's FO input validation rules. Default true; this is separate from XML Schema validation.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="base" type="xs:anyURI"><xs:annotation><xs:documentation>Base URI for relative resources, such as images. A relative base is resolved against the configuration base URI; for example, "./assets/".</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="font-base" type="xs:anyURI"><xs:annotation><xs:documentation>Base URI for relative font paths such as embed-url. Defaults to the general base URI.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="hyphenation-base" type="xs:anyURI"><xs:annotation><xs:documentation>Base URI for user-provided hyphenation patterns, e.g. "./hyphenation/".</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="hyphenation-pattern" type="HyphenationPattern"><xs:annotation><xs:documentation>Map a language and optional country to a pattern file. Repeat for different locales, e.g. &lt;hyphenation-pattern lang="fr" extension="xml"&gt;fr&lt;/hyphenation-pattern&gt;.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="source-resolution" type="PositiveResolution"><xs:annotation><xs:documentation>Pixel density assumed for graphics without suitable resolution metadata. Default 72 dpi.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="target-resolution" type="PositiveResolution"><xs:annotation><xs:documentation>Resolution for generated bitmaps and rasterized effects. Default 72 dpi.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="default-page-settings" type="DefaultPageSettings"><xs:annotation><xs:documentation>Fallback page dimensions when the FO page master uses auto. Explicit dimensions in FO take precedence.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="break-indent-inheritance" type="BooleanText"><xs:annotation><xs:documentation>Opt in to alternate indent inheritance compatible with some other FO processors. Default false.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="prefer-renderer" type="BooleanText"><xs:annotation><xs:documentation>Prefer the older Renderer interface where one exists, instead of checking IFDocumentHandler first. Default false; this does not select an output MIME type.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="accessibility" type="Accessibility"><xs:annotation><xs:documentation>Enable structure tagging for accessible output, e.g. &lt;accessibility&gt;true&lt;/accessibility&gt;. Does not by itself make a PDF conform to PDF/UA.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="complex-scripts" type="ComplexScripts"><xs:annotation><xs:documentation>By default, complex-script shaping and bidirectional processing are enabled. Use disabled="true" to turn them off.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="use-cache" type="BooleanText"><xs:annotation><xs:documentation>Cache discovered font information between runs. Default true.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="cache-file" type="xs:string"><xs:annotation><xs:documentation>Override the path of the font information cache when caching is enabled.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="base14-kerning" type="BooleanText"><xs:annotation><xs:documentation>Enable kerning for the built-in PDF base 14 fonts.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="image-cache" type="BooleanText"><xs:annotation><xs:documentation>Enable or disable FOP's image cache.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="table-border-overpaint" type="BooleanText"><xs:annotation><xs:documentation>Overpaint table borders to help hide uneven joins. Default false.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="simple-line-breaking" type="BooleanText"><xs:annotation><xs:documentation>Use the faster, simpler line breaker. This can change the layout. Default false.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="skip-page-position-only-allowed" type="BooleanText"><xs:annotation><xs:documentation>Default true. Set false to allow the blank final page that can arise when retrying a master with page-position="only".</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="legacy-skip-page-position-only" type="BooleanText"><xs:annotation><xs:documentation>Use FOP's legacy handling of the page-position="only" fallback.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="legacy-last-page-change-ipd" type="BooleanText"><xs:annotation><xs:documentation>Use FOP's legacy handling when the last page changes the inline progression dimension.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="legacy-fo-wrapper" type="BooleanText"><xs:annotation><xs:documentation>Use FOP's legacy layout behavior for fo:wrapper.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="legacy-invalid-break-position" type="BooleanText"><xs:annotation><xs:documentation>Restore FOP's legacy handling of invalid layout break positions for compatibility with existing documents.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="use-parent-ipd-image-scaling" type="BooleanText"><xs:annotation><xs:documentation>Use the parent inline progression dimension when calculating image scaling.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="fonts" type="Fonts"><xs:annotation><xs:documentation>Global font substitutions and referenced-font matching. Configure actual font registration inside the target renderer's fonts element.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="image-loading" type="ImageLoading"><xs:annotation><xs:documentation>Configure image loader priorities and optional ICC conversion on input.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="renderers" type="Renderers"><xs:annotation><xs:documentation>Options scoped to each output MIME type. For PDF, use &lt;renderer mime="application/pdf"&gt;.</xs:documentation></xs:annotation></xs:element>
+            </xs:choice>
+            <xs:attribute name="version" type="xs:string" fixed="1.0" use="required"><xs:annotation><xs:documentation>Configuration format version, always 1.0. This is neither the FOP release number nor the PDF version.</xs:documentation></xs:annotation></xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="DefaultPageSettings">
+        <xs:annotation><xs:documentation>Dimensions for a page master with page-height or page-width set to auto.</xs:documentation></xs:annotation>
+        <xs:attribute name="width" type="xs:string"><xs:annotation><xs:documentation>Fallback page width, e.g. "210mm"; defaults to 8.26in.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="height" type="xs:string"><xs:annotation><xs:documentation>Fallback page height, e.g. "297mm"; defaults to 11in.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="Accessibility">
+        <xs:annotation><xs:documentation>Tagged-output switch with optional structure-tree behavior.</xs:documentation></xs:annotation>
+        <xs:simpleContent><xs:extension base="BooleanText">
+            <xs:attribute name="keep-empty-tags" type="BooleanAttribute"><xs:annotation><xs:documentation>Keep empty structure elements. FOP 2.12 defaults to true; set false to omit them.</xs:documentation></xs:annotation></xs:attribute>
+            <xs:attribute name="static-region-per-page" type="BooleanAttribute"><xs:annotation><xs:documentation>Create separate static-region tags for every page instead of grouping them. Default false.</xs:documentation></xs:annotation></xs:attribute>
+        </xs:extension></xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="ComplexScripts">
+        <xs:annotation><xs:documentation>Settings for advanced script shaping and bidirectional processing.</xs:documentation></xs:annotation>
+        <xs:attribute name="disabled" type="BooleanAttribute"><xs:annotation><xs:documentation>Set true to disable complex-script processing. Omitting the attribute leaves it enabled.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="HyphenationPattern">
+        <xs:annotation><xs:documentation>A language or locale's hyphenation pattern filename.</xs:documentation></xs:annotation>
+        <xs:simpleContent><xs:extension base="xs:string">
+            <xs:attribute name="lang" type="TwoLetterCode" use="required"><xs:annotation><xs:documentation>Two-letter language code, e.g. fr. Specify the country separately.</xs:documentation></xs:annotation></xs:attribute>
+            <xs:attribute name="country" type="TwoLetterCode"><xs:annotation><xs:documentation>Optional two-letter country code, e.g. CA.</xs:documentation></xs:annotation></xs:attribute>
+            <xs:attribute name="extension"><xs:annotation><xs:documentation>Pattern format: xml for an XML pattern, hyp for a compiled FOP pattern. Omit to let FOP try the supported formats.</xs:documentation></xs:annotation>
+                <xs:simpleType><xs:restriction base="xs:token"><xs:enumeration value="xml"/><xs:enumeration value="hyp"/></xs:restriction></xs:simpleType>
+            </xs:attribute>
+        </xs:extension></xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="ImageLoading">
+        <xs:annotation><xs:documentation>Settings used by the image loading framework before rendering.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element name="penalty" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation><xs:documentation>Adjust the priority of an image loader. Negative values favor selection; INFINITE disables the loader.</xs:documentation></xs:annotation>
+            <xs:complexType>
+                <xs:attribute name="value" type="xs:token" use="required"><xs:annotation><xs:documentation>Signed integer penalty, e.g. -1000, or INFINITE.</xs:documentation></xs:annotation></xs:attribute>
+                <xs:attribute name="class" type="xs:string" use="required"><xs:annotation><xs:documentation>Fully qualified Java class name of the image loader.</xs:documentation></xs:annotation></xs:attribute>
+            </xs:complexType>
+        </xs:element></xs:sequence>
+        <xs:attribute name="icc-converter" type="xs:anyURI"><xs:annotation><xs:documentation>ICC profile for converting input RGB images to CMYK. For PDF/PostScript, configure loader penalties so ImageIO is used.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="Renderers">
+        <xs:annotation><xs:documentation>Renderer blocks keyed by output MIME type. Declare each MIME type at most once.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element name="renderer" type="Renderer" minOccurs="0" maxOccurs="unbounded"><xs:annotation><xs:documentation>Settings for the renderer selected by the mime attribute. FOP ignores options that the selected renderer does not read.</xs:documentation></xs:annotation></xs:element></xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Renderer">
+        <xs:annotation><xs:documentation>Combined renderer vocabulary. XSD 1.0 cannot select a different content model based on the mime attribute. PDF-only and other renderer-specific settings are marked below.</xs:documentation></xs:annotation>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="fonts" type="Fonts"><xs:annotation><xs:documentation>Register fonts for this renderer using font entries, directories or auto-detect. The mechanisms can be combined.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="filterList" type="FilterList"><xs:annotation><xs:documentation>PDF: encode or compress PDF streams. Repeat for distinct types, e.g. one default list and one with type="image".</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="pdf-ua-mode" type="PdfUaMode"><xs:annotation><xs:documentation>PDF: use PDF/UA-1 to enable FOP's PDF/UA checks and identification. Supply accessible source content and verify independently; a mode flag is not a conformance certificate.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="pdf-a-mode" type="PdfAMode"><xs:annotation><xs:documentation>PDF: select an archival PDF/A profile, e.g. PDF/A-2b. PDF/A does not allow encryption.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="pdf-x-mode" type="PdfXMode"><xs:annotation><xs:documentation>PDF: select a print exchange profile; set the required output ICC profile as appropriate.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="pdf-vt-mode" type="PdfVtMode"><xs:annotation><xs:documentation>PDF: enable variable and transactional printing with PDF/VT-1; requires PDF/X-4.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="version" type="PdfVersion"><xs:annotation><xs:documentation>PDF: requested PDF version, e.g. 1.7. Supported features depend on renderer and profiles; a version number alone does not enable features.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="output-profile" type="xs:anyURI"><xs:annotation><xs:documentation>PDF: URI of the ICC profile for the output intent, e.g. "./press.icc".</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="disable-srgb-colorspace" type="BooleanText"><xs:annotation><xs:documentation>PDF: emit device RGB instead of the default calibrated sRGB. Incompatible with PDF/A, PDF/X or an explicit output profile.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="use-object-streams" type="BooleanText"><xs:annotation><xs:documentation>PDF: compress eligible PDF objects into object streams. Use PDF 1.5 or later.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="linearization" type="BooleanText"><xs:annotation><xs:documentation>PDF: arrange the file for progressive viewing over a network.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="merge-fonts" type="MergeFonts"><xs:annotation><xs:documentation>PDF: attempt to merge fonts when importing PDF content. This is separate from regular FO font registration.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="merge-form-fields" type="BooleanText"><xs:annotation><xs:documentation>PDF: merge form fields from imported PDF content where supported. Does not create fields from FO markup.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="form-xobject" type="BooleanText"><xs:annotation><xs:documentation>PDF: use a form XObject for imported PDF content.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="force-uri-basic-link" type="BooleanText"><xs:annotation><xs:documentation>PDF: force basic-link external targets to URI actions rather than file-specific actions.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="encryption-params" type="Encryption"><xs:annotation><xs:documentation>PDF: configure passwords, encryption length and viewer permissions. Do not check real passwords into source control.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="sign-params" type="Signing"><xs:annotation><xs:documentation>PDF: sign the output with the configured keystore.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="auto-rotate-landscape" type="BooleanText"><xs:annotation><xs:documentation>PostScript: rotate landscape pages for portrait-fed printers. Default false.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="language-level" type="xs:positiveInteger"><xs:annotation><xs:documentation>PostScript: language level of the output. Defaults to 3.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="safe-set-page-device" type="BooleanText"><xs:annotation><xs:documentation>PostScript: use the safe variant of setpagedevice.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="dsc-compliant" type="BooleanText"><xs:annotation><xs:documentation>PostScript: produce Document Structuring Conventions compliant output. Defaults to true.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="acrobat-downsample" type="BooleanText"><xs:annotation><xs:documentation>PostScript: allow Acrobat Distiller to downsample images.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="compress-streams" type="BooleanText"><xs:annotation><xs:documentation>PostScript: compress image and other data streams.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="jpeg-compression" type="xs:string"><xs:annotation><xs:documentation>PostScript: JPEG compression quality setting for raster images.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="optimize-resources" type="BooleanText"><xs:annotation><xs:documentation>PostScript or PCL: optimize resources in the generated document.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="rendering" type="xs:token"><xs:annotation><xs:documentation>PostScript, PCL or bitmap renderer quality/speed preference. See the selected renderer's documented values.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="text-rendering" type="xs:token"><xs:annotation><xs:documentation>PCL: auto uses printer fonts where possible; bitmap renders all text as images.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="disable-pjl" type="BooleanText"><xs:annotation><xs:documentation>PCL: omit Printer Job Language commands such as job setup and termination.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="images" type="RendererImages"><xs:annotation><xs:documentation>AFP or PCL image rendering settings. Allowed modes and applicable attributes depend on the renderer.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="shading" type="xs:token"><xs:annotation><xs:documentation>AFP: choose color shading or dithered shading.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="renderer-resolution" type="xs:positiveInteger"><xs:annotation><xs:documentation>AFP: output resolution in dpi; default 240.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="line-width-correction" type="xs:decimal"><xs:annotation><xs:documentation>AFP: device-specific line width correction; default 2.5.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="resource-group-file" type="xs:anyURI"><xs:annotation><xs:documentation>AFP: file for external resources; defaults to resources.afp.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="default-resource-levels">
+                <xs:annotation><xs:documentation>AFP: map resource types to levels using attributes, e.g. graphic="inline". See the AFP output documentation for resource types and levels.</xs:documentation></xs:annotation>
+                <xs:complexType><xs:anyAttribute namespace="##local" processContents="skip"/></xs:complexType>
+            </xs:element>
+            <xs:element name="goca" type="Goca"><xs:annotation><xs:documentation>AFP: control GOCA vector graphic output.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="format"><xs:annotation><xs:documentation>SVG output module: choose paginated output. This does not affect embedded SVG in PDF output.</xs:documentation></xs:annotation>
+                <xs:complexType><xs:attribute name="type" type="xs:token" use="required"><xs:annotation><xs:documentation>SVG output format, e.g. paginated.</xs:documentation></xs:annotation></xs:attribute></xs:complexType>
+            </xs:element>
+            <xs:element name="link" type="BooleanValue"><xs:annotation><xs:documentation>SVG output module: set value="true" to enable links in the generated SVG.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="strokeText" type="BooleanValue"><xs:annotation><xs:documentation>SVG output module: set value="true" to draw text as outlines rather than SVG text.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="transparent-page-background" type="BooleanText"><xs:annotation><xs:documentation>Bitmap output (e.g. PNG and TIFF): use a transparent page background when possible.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="background-color" type="xs:string"><xs:annotation><xs:documentation>Bitmap output: page background color, e.g. white or #f5f5f5. Ignored when the background is transparent.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="anti-aliasing" type="BooleanText"><xs:annotation><xs:documentation>Bitmap output: smooth rendered edges. Default true.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="color-mode" type="xs:token"><xs:annotation><xs:documentation>Bitmap output: choose rgba, rgb, gray, binary or bi-level where the format supports it.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="compression" type="xs:token"><xs:annotation><xs:documentation>TIFF compression method, e.g. CCITT T.6 for bilevel images.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="single-strip" type="BooleanText"><xs:annotation><xs:documentation>TIFF: write all image rows in one strip instead of multiple strips.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="endianness"><xs:annotation><xs:documentation>TIFF byte order. Use DEFAULT, LITTLE_ENDIAN or BIG_ENDIAN.</xs:documentation></xs:annotation>
+                <xs:simpleType><xs:restriction base="xs:token"><xs:enumeration value="DEFAULT"/><xs:enumeration value="LITTLE_ENDIAN"/><xs:enumeration value="BIG_ENDIAN"/></xs:restriction></xs:simpleType>
+            </xs:element>
+            <xs:element name="encoding" type="xs:string"><xs:annotation><xs:documentation>Plain text output character encoding, e.g. UTF-8.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="xml-handler" type="XmlHandler"><xs:annotation><xs:documentation>Renderer-specific options for embedded XML, such as SVG stroke-text handling in AFP.</xs:documentation></xs:annotation></xs:element>
+        </xs:choice>
+        <xs:attribute name="mime" type="xs:token" use="required"><xs:annotation><xs:documentation>Renderer output MIME type, e.g. application/pdf, application/postscript, application/x-afp or image/png.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="BooleanValue">
+        <xs:annotation><xs:documentation>A renderer option with a required boolean value attribute.</xs:documentation></xs:annotation>
+        <xs:attribute name="value" type="BooleanAttribute" use="required"><xs:annotation><xs:documentation>Whether this option is enabled.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="FilterList">
+        <xs:annotation><xs:documentation>Ordered list of PDF stream filters for a single stream category.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element name="value" maxOccurs="unbounded"><xs:annotation><xs:documentation>Filter name: flate compresses; ascii-85 or ascii-hex encode binary bytes as text; null disables filtering.</xs:documentation></xs:annotation>
+            <xs:simpleType><xs:restriction base="xs:token"><xs:enumeration value="flate"/><xs:enumeration value="ascii-85"/><xs:enumeration value="ascii-hex"/><xs:enumeration value="null"/></xs:restriction></xs:simpleType>
+        </xs:element></xs:sequence>
+        <xs:attribute name="type" type="xs:token"><xs:annotation><xs:documentation>Stream category, e.g. image. Omit for the default filters. FOP rejects two lists for the same category in strict configuration mode.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:simpleType name="PdfVersion"><xs:annotation><xs:documentation>PDF versions documented for renderer configuration. Default PDF output is 1.4 unless settings require another version.</xs:documentation></xs:annotation>
+        <xs:restriction base="xs:token"><xs:enumeration value="1.4"/><xs:enumeration value="1.5"/><xs:enumeration value="1.6"/><xs:enumeration value="1.7"/><xs:enumeration value="2.0"/></xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PdfUaMode"><xs:annotation><xs:documentation>FOP 2.12 supports PDF/UA-1; use PDF/UA disabled to explicitly disable the mode.</xs:documentation></xs:annotation>
+        <xs:restriction base="xs:token"><xs:enumeration value="PDF/UA-1"/><xs:enumeration value="PDF/UA disabled"/></xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PdfAMode"><xs:annotation><xs:documentation>FOP's PDF/A versions and conformance levels. A, B and U are case-insensitive in FOP; these are the recommended lowercase spellings.</xs:documentation></xs:annotation>
+        <xs:restriction base="xs:token">
+            <xs:enumeration value="PDF/A-1a"/><xs:enumeration value="PDF/A-1b"/>
+            <xs:enumeration value="PDF/A-2a"/><xs:enumeration value="PDF/A-2b"/><xs:enumeration value="PDF/A-2u"/>
+            <xs:enumeration value="PDF/A-3a"/><xs:enumeration value="PDF/A-3b"/><xs:enumeration value="PDF/A-3u"/>
+            <xs:enumeration value="PDF/A disabled"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PdfXMode"><xs:annotation><xs:documentation>Supported PDF/X modes and the disabled setting.</xs:documentation></xs:annotation>
+        <xs:restriction base="xs:token"><xs:enumeration value="PDF/X-3:2003"/><xs:enumeration value="PDF/X-4"/><xs:enumeration value="PDF/X disabled"/></xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="PdfVtMode"><xs:annotation><xs:documentation>Supported PDF/VT mode and the disabled setting.</xs:documentation></xs:annotation>
+        <xs:restriction base="xs:token"><xs:enumeration value="PDF/VT-1"/><xs:enumeration value="PDF/VT disabled"/></xs:restriction>
+    </xs:simpleType>
+    <xs:complexType name="MergeFonts"><xs:annotation><xs:documentation>Imported-PDF font merge switch.</xs:documentation></xs:annotation>
+        <xs:simpleContent><xs:extension base="BooleanText"><xs:attribute name="remap-singlebyte-font" type="BooleanAttribute"><xs:annotation><xs:documentation>Remap single-byte fonts while merging. Defaults to true.</xs:documentation></xs:annotation></xs:attribute></xs:extension></xs:simpleContent>
+    </xs:complexType>
+    <xs:complexType name="Encryption"><xs:annotation><xs:documentation>PDF encryption options. Presence of any no* permission element disables the permission, even if it contains text such as false; write these elements empty.</xs:documentation></xs:annotation>
+        <xs:all>
+            <xs:element name="user-password" type="xs:string" minOccurs="0"><xs:annotation><xs:documentation>Password needed to open the document with its restricted permissions.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="owner-password" type="xs:string" minOccurs="0"><xs:annotation><xs:documentation>Password for unrestricted access and permission changes.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="encryption-length" type="xs:positiveInteger" minOccurs="0"><xs:annotation><xs:documentation>Encryption key length in bits, e.g. 256 for AES-256. FOP checks the length and compatibility when rendering.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="encrypt-metadata" type="BooleanText" minOccurs="0"><xs:annotation><xs:documentation>Encrypt XMP metadata when supported by the selected encryption mode. Default true.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="noprint" minOccurs="0"><xs:annotation><xs:documentation>Disallow printing.</xs:documentation></xs:annotation><xs:complexType/></xs:element>
+            <xs:element name="noprinthq" minOccurs="0"><xs:annotation><xs:documentation>Disallow high-quality printing.</xs:documentation></xs:annotation><xs:complexType/></xs:element>
+            <xs:element name="nocopy" minOccurs="0"><xs:annotation><xs:documentation>Disallow copying content.</xs:documentation></xs:annotation><xs:complexType/></xs:element>
+            <xs:element name="noedit" minOccurs="0"><xs:annotation><xs:documentation>Disallow modifying page content.</xs:documentation></xs:annotation><xs:complexType/></xs:element>
+            <xs:element name="noannotations" minOccurs="0"><xs:annotation><xs:documentation>Disallow adding or changing annotations.</xs:documentation></xs:annotation><xs:complexType/></xs:element>
+            <xs:element name="nofillinforms" minOccurs="0"><xs:annotation><xs:documentation>Disallow filling existing form fields.</xs:documentation></xs:annotation><xs:complexType/></xs:element>
+            <xs:element name="noaccesscontent" minOccurs="0"><xs:annotation><xs:documentation>Set the restriction on extracting content for accessibility. Avoid this setting for accessible documents.</xs:documentation></xs:annotation><xs:complexType/></xs:element>
+            <xs:element name="noassembledoc" minOccurs="0"><xs:annotation><xs:documentation>Disallow document assembly, such as inserting or rotating pages.</xs:documentation></xs:annotation><xs:complexType/></xs:element>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="Signing"><xs:annotation><xs:documentation>Digital signature for PDF output. Treat the keystore and password as secrets.</xs:documentation></xs:annotation>
+        <xs:all>
+            <xs:element name="keystore" type="xs:anyURI"><xs:annotation><xs:documentation>Path or URI of the signing keystore, e.g. "./signing.p12".</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="password" type="xs:string" minOccurs="0"><xs:annotation><xs:documentation>Password for the signing keystore.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="name" type="xs:string" minOccurs="0"><xs:annotation><xs:documentation>Name shown as the signer.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="location" type="xs:string" minOccurs="0"><xs:annotation><xs:documentation>Location associated with the signature.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="reason" type="xs:string" minOccurs="0"><xs:annotation><xs:documentation>Reason shown for signing this document.</xs:documentation></xs:annotation></xs:element>
+        </xs:all>
+    </xs:complexType>
+    <xs:complexType name="Fonts"><xs:annotation><xs:documentation>Font discovery, explicit font registration and font matching. Global and renderer-specific settings are not interchangeable.</xs:documentation></xs:annotation>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="directory"><xs:annotation><xs:documentation>Scan a directory for fonts, e.g. &lt;directory recursive="true"&gt;./fonts&lt;/directory&gt;. Repeat to scan multiple directories.</xs:documentation></xs:annotation>
+                <xs:complexType><xs:simpleContent><xs:extension base="xs:string"><xs:attribute name="recursive" type="BooleanAttribute"><xs:annotation><xs:documentation>Scan subdirectories too; default false.</xs:documentation></xs:annotation></xs:attribute></xs:extension></xs:simpleContent></xs:complexType>
+            </xs:element>
+            <xs:element name="auto-detect"><xs:annotation><xs:documentation>Discover installed fonts automatically. Avoid in reproducible builds where the available system fonts can vary.</xs:documentation></xs:annotation><xs:complexType/></xs:element>
+            <xs:element name="font" type="Font"><xs:annotation><xs:documentation>Explicit physical font and optional logical font triplets. For PDF, supply embed-url.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="referenced-fonts" type="ReferencedFonts"><xs:annotation><xs:documentation>Families to reference without embedding. Do not use this to bypass font embedding requirements of a PDF profile.</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="substitutions" type="Substitutions"><xs:annotation><xs:documentation>Global font substitution rules, e.g. substitute one font family for another.</xs:documentation></xs:annotation></xs:element>
+        </xs:choice>
+        <xs:attribute name="lazy-load" type="BooleanAttribute"><xs:annotation><xs:documentation>Defer loading explicitly registered fonts until needed where supported by the renderer.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="Font"><xs:annotation><xs:documentation>One physical font. Declare font-triplet entries to control which FO font-family, font-style and font-weight select it.</xs:documentation></xs:annotation>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="font-triplet" type="FontTriplet"><xs:annotation><xs:documentation>Logical name, style and weight for this font, e.g. name="Example Sans" style="normal" weight="400".</xs:documentation></xs:annotation></xs:element>
+            <xs:element name="afp-font" type="AfpFont"><xs:annotation><xs:documentation>AFP: describe an AFP font inside its font entry, not directly inside fonts. AFP also needs at least one font-triplet.</xs:documentation></xs:annotation></xs:element>
+        </xs:choice>
+        <xs:attribute name="embed-url" type="xs:anyURI"><xs:annotation><xs:documentation>Font file URI relative to font-base. Required for an explicit PDF font even if a referenced-font rule prevents embedding.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="metrics-url" type="xs:anyURI"><xs:annotation><xs:documentation>Optional FOP font metrics XML; usually not needed for auto-reading TrueType/OpenType metrics.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="embed-url-afm" type="xs:anyURI"><xs:annotation><xs:documentation>Path to the AFM metrics of a Type 1 font.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="embed-url-pfm" type="xs:anyURI"><xs:annotation><xs:documentation>Path to the PFM metrics of a Type 1 font.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="sub-font" type="xs:string"><xs:annotation><xs:documentation>Internal name of the face to use within a font collection.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="kerning" type="BooleanAttribute"><xs:annotation><xs:documentation>Enable kerning for this font. Defaults to true; yes and no are accepted legacy spellings.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="advanced" type="BooleanAttribute"><xs:annotation><xs:documentation>Use advanced typographic tables such as GPOS and GSUB. Defaults to true.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="simulate-style" type="BooleanAttribute"><xs:annotation><xs:documentation>PDF: allow synthetic bold or italic for fonts without the corresponding face. Prefer a real font face when available.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="embed-as-type1" type="BooleanAttribute"><xs:annotation><xs:documentation>PostScript: request Type 1 embedding where supported for the font format.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="svg" type="BooleanAttribute"><xs:annotation><xs:documentation>Allow this registered font to be used by the SVG renderer. Defaults to true.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="encoding-mode"><xs:annotation><xs:documentation>Font character encoding strategy: auto, single-byte, or cid. Auto lets FOP choose.</xs:documentation></xs:annotation>
+            <xs:simpleType><xs:restriction base="xs:token"><xs:enumeration value="auto"/><xs:enumeration value="single-byte"/><xs:enumeration value="cid"/></xs:restriction></xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="embedding-mode"><xs:annotation><xs:documentation>Choose subset for used glyphs or full for the entire font where supported. Auto lets FOP choose based on the font format.</xs:documentation></xs:annotation>
+            <xs:simpleType><xs:restriction base="xs:token"><xs:enumeration value="auto"/><xs:enumeration value="subset"/><xs:enumeration value="full"/></xs:restriction></xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="FontTriplet"><xs:annotation><xs:documentation>A selector matching the family, style and weight in FO to the physical font.</xs:documentation></xs:annotation>
+        <xs:attribute name="name" type="xs:string" use="required"><xs:annotation><xs:documentation>FO font-family name, e.g. "Example Sans".</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="style" use="required"><xs:annotation><xs:documentation>Style requested by FO: normal, italic, oblique or backslant.</xs:documentation></xs:annotation>
+            <xs:simpleType><xs:restriction base="xs:token"><xs:enumeration value="normal"/><xs:enumeration value="italic"/><xs:enumeration value="oblique"/><xs:enumeration value="backslant"/></xs:restriction></xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="weight" use="required"><xs:annotation><xs:documentation>Font weight: normal (400), bold (700), or a standard CSS 2 weight from 100 through 900.</xs:documentation></xs:annotation>
+            <xs:simpleType><xs:restriction base="xs:token">
+                <xs:enumeration value="normal"/><xs:enumeration value="bold"/>
+                <xs:enumeration value="100"/><xs:enumeration value="200"/><xs:enumeration value="300"/>
+                <xs:enumeration value="400"/><xs:enumeration value="500"/><xs:enumeration value="600"/>
+                <xs:enumeration value="700"/><xs:enumeration value="800"/><xs:enumeration value="900"/>
+            </xs:restriction></xs:simpleType>
+        </xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="ReferencedFonts"><xs:annotation><xs:documentation>Font-family patterns for fonts referenced rather than embedded in the result.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element name="match" maxOccurs="unbounded"><xs:annotation><xs:documentation>Match a font family by regular expression.</xs:documentation></xs:annotation><xs:complexType>
+            <xs:attribute name="font-family" type="xs:string" use="required"><xs:annotation><xs:documentation>Java regular expression, e.g. "Example Sans.*".</xs:documentation></xs:annotation></xs:attribute>
+        </xs:complexType></xs:element></xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="Substitutions"><xs:annotation><xs:documentation>Global font selector replacements. Rules are processed in the order supplied.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element name="substitution" maxOccurs="unbounded"><xs:annotation><xs:documentation>Replace a requested font selector with a different selector.</xs:documentation></xs:annotation><xs:complexType>
+            <xs:all>
+                <xs:element name="from" type="FontSelector"><xs:annotation><xs:documentation>Requested family, optionally narrowed by style and weight.</xs:documentation></xs:annotation></xs:element>
+                <xs:element name="to" type="FontSelector"><xs:annotation><xs:documentation>Replacement family, style and weight.</xs:documentation></xs:annotation></xs:element>
+            </xs:all>
+        </xs:complexType></xs:element></xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FontSelector"><xs:annotation><xs:documentation>Family, style and weight for one side of a font substitution.</xs:documentation></xs:annotation>
+        <xs:attribute name="font-family" type="xs:string" use="required"><xs:annotation><xs:documentation>Logical font family, e.g. "Courier".</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="font-style" type="xs:string"><xs:annotation><xs:documentation>Style selector, e.g. "italic".</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="font-weight" type="xs:string"><xs:annotation><xs:documentation>Weight selector, e.g. "bold" or "400".</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="AfpFont"><xs:annotation><xs:documentation>AFP font resource settings for bitmap or outline characters.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element name="afp-raster-font" minOccurs="0" maxOccurs="unbounded"><xs:annotation><xs:documentation>Associate one fixed raster point size with an AFP character set.</xs:documentation></xs:annotation><xs:complexType>
+            <xs:attribute name="size" type="xs:decimal" use="required"><xs:annotation><xs:documentation>Fixed size in points, e.g. 10.</xs:documentation></xs:annotation></xs:attribute>
+            <xs:attribute name="characterset" type="xs:string" use="required"><xs:annotation><xs:documentation>AFP character set resource name, e.g. C0N20000.</xs:documentation></xs:annotation></xs:attribute>
+            <xs:attribute name="base14-font" type="xs:string"><xs:annotation><xs:documentation>Optional Base 14 font name for metrics.</xs:documentation></xs:annotation></xs:attribute>
+        </xs:complexType></xs:element></xs:sequence>
+        <xs:attribute name="type" use="required"><xs:annotation><xs:documentation>AFP font format: raster, outline, CIDKeyed or truetype.</xs:documentation></xs:annotation>
+            <xs:simpleType><xs:restriction base="xs:token"><xs:enumeration value="raster"/><xs:enumeration value="outline"/><xs:enumeration value="CIDKeyed"/><xs:enumeration value="truetype"/></xs:restriction></xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="codepage" type="xs:string" use="required"><xs:annotation><xs:documentation>AFP code page resource name, e.g. T1V10500.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="encoding" type="xs:string" use="required"><xs:annotation><xs:documentation>Encoding of the code page, e.g. Cp500.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="name" type="xs:string"><xs:annotation><xs:documentation>AFP font resource name.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="base-uri" type="xs:anyURI"><xs:annotation><xs:documentation>Base URI for AFP font resources.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="characterset" type="xs:string"><xs:annotation><xs:documentation>AFP character set for outline or CID-keyed fonts.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="base14-font" type="xs:string"><xs:annotation><xs:documentation>Optional Base 14 font name for outline font metrics.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="sub-font" type="xs:string"><xs:annotation><xs:documentation>Face name in an AFP TrueType collection.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="position-by-char" type="BooleanAttribute"><xs:annotation><xs:documentation>TrueType AFP fonts: position glyphs individually. Default true.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="ebcdic-dbcs" type="BooleanAttribute"><xs:annotation><xs:documentation>CID-keyed AFP fonts: use EBCDIC double-byte line data.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="RendererImages"><xs:annotation><xs:documentation>Image rendering switches interpreted by AFP or PCL.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element name="jpeg" type="AfpJpeg" minOccurs="0"><xs:annotation><xs:documentation>AFP: configure JPEG embedding and encoding inside the images block.</xs:documentation></xs:annotation></xs:element></xs:sequence>
+        <xs:attribute name="mode" type="xs:token"><xs:annotation><xs:documentation>Image mode, e.g. b+w or color for AFP.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="bits-per-pixel" type="xs:positiveInteger"><xs:annotation><xs:documentation>AFP grayscale depth, e.g. 8 bits per pixel.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="native" type="BooleanAttribute"><xs:annotation><xs:documentation>AFP: embed supported images in their native format rather than converting them to IOCA.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="cmyk" type="BooleanAttribute"><xs:annotation><xs:documentation>AFP: use CMYK with mode="color".</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="dithering-quality" type="xs:token"><xs:annotation><xs:documentation>AFP: choose min, max or a number between 0.0 and 1.0 for dithering quality.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="native-pdf" type="BooleanAttribute"><xs:annotation><xs:documentation>AFP: allow native PDF embedding where supported.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="pseg" type="BooleanAttribute"><xs:annotation><xs:documentation>AFP: put an image inside a page segment.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="fs45" type="BooleanAttribute"><xs:annotation><xs:documentation>AFP: choose IOCA function set 45.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="mask-enabled" type="BooleanAttribute"><xs:annotation><xs:documentation>AFP: enable image masks where supported.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="mapping_option" type="xs:token"><xs:annotation><xs:documentation>AFP: choose image mapping; scale-to-fit selects scale-to-fill mapping.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="metadata-in-object-container" type="BooleanAttribute"><xs:annotation><xs:documentation>AFP: store metadata inside the object container.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="AfpJpeg">
+        <xs:annotation><xs:documentation>JPEG-specific options for AFP images.</xs:documentation></xs:annotation>
+        <xs:attribute name="allow-embedding" type="BooleanAttribute"><xs:annotation><xs:documentation>Allow embedding JPEG images.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="use-ioca-images" type="BooleanAttribute"><xs:annotation><xs:documentation>Wrap JPEG images using IOCA. Defaults to true.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="bitmap-encoding-quality" type="xs:decimal"><xs:annotation><xs:documentation>Bitmap encoding quality between 0 and 1. Defaults to 1.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="Goca">
+        <xs:annotation><xs:documentation>GOCA vector graphics settings for AFP output.</xs:documentation></xs:annotation>
+        <xs:attribute name="enabled" type="BooleanAttribute"><xs:annotation><xs:documentation>Generate GOCA output for vector graphics. Defaults to true.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="text" type="xs:token"><xs:annotation><xs:documentation>Use stroke or shapes to output text as paths.</xs:documentation></xs:annotation></xs:attribute>
+        <xs:attribute name="pseg" type="BooleanAttribute"><xs:annotation><xs:documentation>Wrap vector graphics in a page segment.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+    <xs:complexType name="XmlHandler"><xs:annotation><xs:documentation>Renderer-specific configuration for XML graphics in the identified namespace.</xs:documentation></xs:annotation>
+        <xs:sequence><xs:element name="stroke-text" type="BooleanText" minOccurs="0"><xs:annotation><xs:documentation>AFP SVG handling: draw text as outlines where supported.</xs:documentation></xs:annotation></xs:element></xs:sequence>
+        <xs:attribute name="namespace" type="xs:anyURI" use="required"><xs:annotation><xs:documentation>XML namespace for the handler, e.g. http://www.w3.org/2000/svg.</xs:documentation></xs:annotation></xs:attribute>
+    </xs:complexType>
+</xs:schema>
