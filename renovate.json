@@ -1,0 +1,31 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", "helpers:pinGitHubActionDigests"],
+  "enabledManagers": ["gradle", "gradle-wrapper", "github-actions"],
+  "automerge": false,
+  "packageRules": [
+    {
+      "description": "FOP updates change renderer behavior and need the compatibility probes.",
+      "matchManagers": ["gradle"],
+      "matchPackageNames": ["org.apache.xmlgraphics:fop"],
+      "dependencyDashboardApproval": true,
+      "prBodyNotes": [
+        "Run `./verification/gradlew -p verification test -PfopVersion={{newValue}} --tests '*FopGapTest'` against the candidate release, update the XSD compatibility annotations, and regenerate the compatibility report before merging."
+      ]
+    },
+    {
+      "description": "Gradle wrapper updates also change the wrapper JAR and the distribution checksum.",
+      "matchManagers": ["gradle-wrapper"],
+      "dependencyDashboardApproval": true,
+      "prBodyNotes": [
+        "Run `./verification/gradlew -p verification wrapper --no-daemon`, commit the regenerated wrapper files, and verify the distribution SHA-256 before merging."
+      ]
+    },
+    {
+      "description": "Keep verification on the Java 21 toolchain.",
+      "matchDatasources": ["java-version"],
+      "matchUpdateTypes": ["major"],
+      "enabled": false
+    }
+  ]
+}
