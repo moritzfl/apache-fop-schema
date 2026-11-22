@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
+         xmlns:fox="http://xmlgraphics.apache.org/fop/extensions"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.w3.org/1999/XSL/Format ../../../schema/fo.xsd">
+    <fo:layout-master-set>
+        <fo:simple-page-master master-name="chapter" page-width="240pt" page-height="300pt" margin="14pt">
+            <fo:region-body margin-top="20pt"/>
+            <fo:region-before extent="16pt"/>
+        </fo:simple-page-master>
+    </fo:layout-master-set>
+    <fo:page-sequence master-reference="chapter" force-page-count="no-force">
+        <fo:static-content flow-name="xsl-region-before">
+            <fo:block>Chapter: <fo:retrieve-marker retrieve-class-name="chapter"
+                   retrieve-position="first-including-carryover" retrieve-boundary="page-sequence"/></fo:block>
+        </fo:static-content>
+        <fo:flow flow-name="xsl-region-body">
+            <fo:block>
+                <fo:marker marker-class-name="chapter">Observations</fo:marker>
+                <fo:change-bar-begin change-bar-class="revision" change-bar-color="red" change-bar-width="2pt"/>
+                Initial findings.
+                <fo:change-bar-end change-bar-class="revision"/>
+            </fo:block>
+            <fo:block break-before="page">Continued findings.</fo:block>
+        </fo:flow>
+    </fo:page-sequence>
+    <fox:external-document src="url('appendix.svg')"/>
+</fo:root>

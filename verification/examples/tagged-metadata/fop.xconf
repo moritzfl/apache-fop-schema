@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fop version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="../../../schema/fop-config-no-namespace.xsd">
+    <strict-configuration>true</strict-configuration>
+    <accessibility keep-empty-tags="false">true</accessibility>
+    <default-page-settings width="320pt" height="400pt"/>
+    <renderers>
+        <renderer mime="application/pdf">
+            <version>1.7</version>
+            <filterList><value>null</value></filterList>
+            <filterList type="image"><value>flate</value></filterList>
+        </renderer>
+    </renderers>
+</fop>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
+         xmlns:x="adobe:ns:meta/"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.w3.org/1999/XSL/Format ../../../schema/fo.xsd"
+         language="en" country="GB" font-family="Example Sans">
+    <fo:layout-master-set>
+        <fo:simple-page-master master-name="page" page-width="210mm" page-height="297mm" margin="20mm">
+            <fo:region-body/>
+        </fo:simple-page-master>
+    </fo:layout-master-set>
+    <fo:declarations>
+        <x:xmpmeta>
+            <rdf:RDF>
+                <rdf:Description rdf:about="">
+                    <dc:title><rdf:Alt><rdf:li xml:lang="x-default">Embedded font example</rdf:li></rdf:Alt></dc:title>
+                </rdf:Description>
+            </rdf:RDF>
+        </x:xmpmeta>
+    </fo:declarations>
+    <fo:page-sequence master-reference="page">
+        <fo:flow flow-name="xsl-region-body">
+            <fo:block role="H1">Embedded font example</fo:block>
+            <fo:block>Accented text: café</fo:block>
+        </fo:flow>
+    </fo:page-sequence>
+</fo:root>

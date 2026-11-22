@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fop version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="../../../schema/fop-config-no-namespace.xsd">
+    <strict-configuration>true</strict-configuration>
+    <accessibility>true</accessibility>
+    <renderers>
+        <renderer mime="application/pdf">
+            <fonts>
+                <font embed-url="LiberationSans-Regular.ttf" embedding-mode="full">
+                    <font-triplet name="Example Sans" style="normal" weight="400"/>
+                </font>
+            </fonts>
+            <pdf-ua-mode>PDF/UA-1</pdf-ua-mode>
+        </renderer>
+    </renderers>
+</fop>

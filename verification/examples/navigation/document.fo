@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
+         xmlns:fox="http://xmlgraphics.apache.org/fop/extensions"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.w3.org/1999/XSL/Format ../../../schema/fo.xsd">
+    <fo:layout-master-set>
+        <fo:simple-page-master master-name="report" page-width="210mm" page-height="297mm" margin="20mm">
+            <fo:region-body margin-bottom="10mm"/>
+            <fo:region-after extent="8mm"/>
+        </fo:simple-page-master>
+    </fo:layout-master-set>
+    <fo:bookmark-tree>
+        <fo:bookmark internal-destination="results"><fo:bookmark-title>Results outline</fo:bookmark-title></fo:bookmark>
+    </fo:bookmark-tree>
+    <fox:destination internal-destination="results"/>
+    <fo:page-sequence master-reference="report" id="report-pages" force-page-count="no-force">
+        <fo:static-content flow-name="xsl-region-after">
+            <fo:block>Page <fo:page-number/> of <fo:page-number-citation-last ref-id="report-pages"/></fo:block>
+        </fo:static-content>
+        <fo:flow flow-name="xsl-region-body">
+            <fo:block font-size="18pt">Report overview</fo:block>
+            <fo:block><fo:basic-link internal-destination="results">See the results</fo:basic-link></fo:block>
+            <fo:block><fo:basic-link external-destination="url('https://example.org/')">Read online</fo:basic-link></fo:block>
+            <fo:block id="results" break-before="page">Report results</fo:block>
+        </fo:flow>
+    </fo:page-sequence>
+</fo:root>

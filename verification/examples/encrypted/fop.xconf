@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fop version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="../../../schema/fop-config-no-namespace.xsd">
+    <strict-configuration>true</strict-configuration>
+    <renderers>
+        <renderer mime="application/pdf">
+            <!-- Public test values only. -->
+            <encryption-params>
+                <user-password>example-user</user-password>
+                <owner-password>example-owner</owner-password>
+                <encryption-length>256</encryption-length>
+                <noprint/>
+                <nocopy/>
+            </encryption-params>
+        </renderer>
+    </renderers>
+</fop>

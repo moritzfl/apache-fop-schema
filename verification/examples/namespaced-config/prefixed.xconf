@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Valid XML for the schema; FOP 2.12 ignores prefixed configuration settings. -->
+<f:fop xmlns:f="http://xmlgraphics.apache.org/fop/config"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://xmlgraphics.apache.org/fop/config ../../../schema/fop-config.xsd"
+       version="1.0">
+    <f:accessibility>true</f:accessibility>
+    <f:default-page-settings width="350pt" height="450pt"/>
+</f:fop>

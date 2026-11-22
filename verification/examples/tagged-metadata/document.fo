@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
+         xmlns:fox="http://xmlgraphics.apache.org/fop/extensions"
+         xmlns:x="adobe:ns:meta/"
+         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:pdf="http://xmlgraphics.apache.org/fop/extensions/pdf"
+         xmlns:svg="http://www.w3.org/2000/svg"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.w3.org/1999/XSL/Format ../../../schema/fo.xsd"
+         language="en" country="GB">
+    <fo:layout-master-set>
+        <fo:simple-page-master master-name="auto" page-width="auto" page-height="auto" margin="16pt">
+            <fo:region-body/>
+        </fo:simple-page-master>
+    </fo:layout-master-set>
+    <fo:declarations>
+        <x:xmpmeta>
+            <rdf:RDF>
+                <rdf:Description rdf:about="">
+                    <dc:title><rdf:Alt><rdf:li xml:lang="x-default">Field report</rdf:li><rdf:li xml:lang="de">Feldbericht</rdf:li></rdf:Alt></dc:title>
+                    <dc:creator><rdf:Seq><rdf:li>Example Team</rdf:li></rdf:Seq></dc:creator>
+                    <dc:description><rdf:Alt><rdf:li xml:lang="x-default">Illustrated observations</rdf:li></rdf:Alt></dc:description>
+                    <dc:language><rdf:Bag><rdf:li>en-GB</rdf:li></rdf:Bag></dc:language>
+                </rdf:Description>
+            </rdf:RDF>
+        </x:xmpmeta>
+        <pdf:info><pdf:name key="Project">Schema verification</pdf:name></pdf:info>
+        <pdf:catalog>
+            <pdf:dictionary key="ViewerPreferences">
+                <pdf:name key="Duplex">DuplexFlipShortEdge</pdf:name>
+            </pdf:dictionary>
+        </pdf:catalog>
+    </fo:declarations>
+    <fo:page-sequence master-reference="auto" language="en" country="GB">
+        <fo:flow flow-name="xsl-region-body">
+            <fo:block role="H1" id="report-title">Illustrated field report</fo:block>
+            <fo:block>
+                <fo:instream-foreign-object fox:alt-text="Blue square">
+                    <svg:svg width="24pt" height="24pt" viewBox="0 0 24 24">
+                        <svg:rect width="24" height="24" fill="blue"/>
+                    </svg:svg>
+                </fo:instream-foreign-object>
+            </fo:block>
+            <fo:block>The <fo:inline fox:abbreviation="World Wide Web">WWW</fo:inline> example.</fo:block>
+            <fo:block><fo:basic-link internal-destination="report-title" fox:alt-text="Back to the report title">Back to top</fo:basic-link></fo:block>
+        </fo:flow>
+    </fo:page-sequence>
+</fo:root>
