@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.w3.org/1999/XSL/Format ../../../schema/fo.xsd">
+    <fo:layout-master-set>
+        <fo:simple-page-master master-name="page" page-width="180pt" page-height="140pt" margin="10pt">
+            <fo:region-body/>
+        </fo:simple-page-master>
+    </fo:layout-master-set>
+    <fo:page-sequence master-reference="page">
+        <fo:flow flow-name="xsl-region-body">
+            <fo:table table-layout="fixed" width="100%">
+                <fo:table-column column-width="proportional-column-width(1)"/>
+                <fo:table-header>
+                    <fo:table-row>
+                        <fo:table-cell id="heading-cell">
+                            <fo:block>Column <fo:retrieve-table-marker retrieve-class-name="heading"/></fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                </fo:table-header>
+                <fo:table-body>
+                    <fo:table-row>
+                        <fo:table-cell>
+                            <fo:marker marker-class-name="heading"><fo:inline font-size="32pt">Heading</fo:inline></fo:marker>
+                            <fo:block>Row</fo:block>
+                        </fo:table-cell>
+                    </fo:table-row>
+                </fo:table-body>
+            </fo:table>
+        </fo:flow>
+    </fo:page-sequence>
+</fo:root>

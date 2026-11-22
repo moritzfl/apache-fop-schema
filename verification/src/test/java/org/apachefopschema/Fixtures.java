@@ -79,6 +79,15 @@ final class Fixtures {
     }
 
     static Rendered render(String fo, String config, Path base, boolean ignoreSchemaHints) throws Exception {
+        return format(fo, config, base, ignoreSchemaHints, MimeConstants.MIME_PDF);
+    }
+
+    static Rendered areaTree(String fo, Path base) throws Exception {
+        return format(fo, null, base, true, MimeConstants.MIME_FOP_AREA_TREE);
+    }
+
+    private static Rendered format(String fo, String config, Path base, boolean ignoreSchemaHints, String mime)
+            throws Exception {
         FopFactoryBuilder builder = config == null ? new FopFactoryBuilder(base.toUri())
                 : new FopConfParser(new ByteArrayInputStream(config.getBytes(StandardCharsets.UTF_8)), base.toUri())
                     .getFopFactoryBuilder();
@@ -91,7 +100,7 @@ final class Fixtures {
         List<Event> events = new ArrayList<>();
         agent.getEventBroadcaster().addEventListener(events::add);
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        Fop fop = factory.newFop(MimeConstants.MIME_PDF, agent, output);
+        Fop fop = factory.newFop(mime, agent, output);
         StreamSource source = new StreamSource(new StringReader(fo), base.resolve("document.fo").toUri().toString());
         TransformerFactory.newDefaultInstance().newTransformer().transform(source, new SAXResult(fop.getDefaultHandler()));
         return new Rendered(output.toByteArray(), List.copyOf(events));

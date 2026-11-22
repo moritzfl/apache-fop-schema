@@ -12,9 +12,14 @@ java {
     }
 }
 
+val fopBaseline = libs.versions.fop.get()
+val fopVersion = providers.gradleProperty("fopVersion").orElse(fopBaseline)
+
 dependencies {
     implementation(libs.commonmark)
-    testImplementation(libs.fop)
+    testImplementation(libs.fop) {
+        version { strictly(fopVersion.get()) }
+    }
     testImplementation(libs.pdfbox)
     testImplementation(platform(libs.junit.bom))
     testImplementation(libs.junit.jupiter)
@@ -33,6 +38,8 @@ tasks.test {
     inputs.dir(stylesheets).withPathSensitivity(PathSensitivity.RELATIVE)
     outputs.dir(pdfs)
     systemProperty("schemaDir", schemas.asFile.absolutePath)
+    systemProperty("fopBaseline", fopBaseline)
+    systemProperty("fopVersion", fopVersion.get())
     systemProperty("exampleDir", examples.asFile.absolutePath)
     systemProperty("stylesheetDir", stylesheets.asFile.absolutePath)
     systemProperty("pdfDir", pdfs.get().asFile.absolutePath)
