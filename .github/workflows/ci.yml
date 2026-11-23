@@ -13,7 +13,10 @@ permissions:
 jobs:
   verification:
     name: Schema and rendering tests
-    runs-on: self-hosted
+    # Public repository: pull requests stay on GitHub-hosted runners. A fork can
+    # change this workflow file, so external-contributor approval is enforced in
+    # the repository settings as well.
+    runs-on: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && 'nas-linux-fop' || 'ubuntu-latest' }}
     timeout-minutes: 15
     steps:
       - name: Check out sources
